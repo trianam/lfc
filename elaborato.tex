@@ -7,18 +7,25 @@
 \usepackage{acronym}
 \usepackage{mathtools}
 \usepackage{amsfonts}
+\usepackage{amsthm}
 \usepackage[hidelinks,breaklinks=true]{hyperref}
 \usepackage{xcolor}
 \usepackage{listings}
 
 \newcommand{\me}{\ensuremath{\mathrm{e}}}
 \newcommand{\md}{\ensuremath{\mathrm{d}}}
+\newcommand{\tc}{\ensuremath{\mathrm{t.c.:}\quad}}
 \newcommand{\expected}[1]{\ensuremath{\mathrm{\textbf{E}}\left[#1\right]}}
 \newcommand{\variance}[1]{\ensuremath{\mathrm{\textbf{Var}}\left(#1\right)}}
 \newcommand{\prob}[1]{\ensuremath{\mathrm{\textbf{P}}\left(#1\right)}}
+%\newcommand{\max}[1]{\ensuremath{\mathrm{max}\left(#1\right)}}
 \newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\mR}{\ensuremath{\mathbb{R}}}
 \newcommand{\codei}[1]{\texttt{#1}}
 
+\newtheorem{defi}{Definizione}[chapter]
+
+\lstset{inputpath=src}
 \lstdefinestyle{customPy}{
  language=python,
  showstringspaces=false,
@@ -54,14 +61,17 @@
 
 \graphicspath{{img/}}
 
+\include{inc/lagrangeRelaxation}
 \include{inc/montecarlo}
 \include{inc/simulatedAnnealing}
 
 \chapter*{Acronimi}
 \addcontentsline{toc}{section}{Acronimi}
 \begin{acronym}[MCM]
-  \acro{MCM}{Monte Carlo Method}
+  \acro{LMM}{Lagrange Multipliers Method}
+  \acro{LRM}{Lagrange Relaxation Method}
   \acro{MCI}{Monte Carlo Integration}
+  \acro{MCM}{Monte Carlo Method}
   \acro{SA}{Simulated Annealing}
   \acro{TSP}{Traveling Salesman Problem}
 \end{acronym}

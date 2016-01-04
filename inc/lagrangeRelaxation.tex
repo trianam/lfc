@@ -1,0 +1,39 @@
+\chapter{\acf{LMM} e \acf{LRM}}
+In questo capitolo vengono presi in considerazione due metodi che
+permettono di calcolare in modo semplice la soluzione a problemi
+di massimizzazione o minimizzazione di funzioni multivariate
+sottoposte a vincoli. Ad esempio problemi come quello di trovare il
+punto più elevato di una strada di campagna (massimizzare la funzione
+bivariata che rappresenta l'elevazione del terreno sottoposta al
+vincolo rappresentato dalla strada), oppure trovare il punto di minima
+pressione all'interno del perimetro regionale (minimizzare la funzione
+bivariata che rappresenta la carta delle isobare sottoposta al vincolo
+dato dai confini della regione).
+\section{\acf{LMM}}
+Il \ac{LMM} \`e una strategia che permette di trovare il massimo o il
+minimo di una funzione sottoposta a vincoli dati da
+equazioni. \`E utile analizzare prima il caso con un solo vincolo.
+\subsection{Singolo vincolo}
+Viene indicato con $f$ la funzione da
+massimizzare/minimizzare e con $g$ il vincolo, per semplificare il
+problema viene mostrato il caso in due variabili in cui:
+\begin{eqnarray*}
+f&:&\mR^2\rightarrow\mR\\
+g&:&\mR^2\rightarrow\mR.
+\end{eqnarray*}
+Senza perdere generalit\`a viene preso in considerazione il problema
+in cui \`e necessario massimizzare $f$, quindi formalmente il problema
+\`e:
+\begin{defi}
+  \begin{eqnarray*}
+    &&\max_{x,y}\left\{f(x,y)\right\}\\
+    &&\tc{}\\
+    &&\quad g(x,y)=0.
+  \end{eqnarray*}
+\end{defi}
+Per applicare il metodo \`e necessario che $f$ e $g$ siano derivabili
+alle prime derivate parziali in $x$ e $y$.
+
+L'intuizione del metodo \`e quella di trovare i punti critici in cui
+non \`e possibile aumentare $f$ nell'intorno della $g$.
+\section{\acf{LRM}}
