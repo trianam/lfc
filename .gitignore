@@ -1,3 +1,6 @@
+## Emacs temporary files
+*~
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -6,6 +9,7 @@
 *.fls
 *.out
 *.toc
+auto/
 
 ## Intermediate documents:
 *.dvi

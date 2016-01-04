@@ -1,0 +1,187 @@
+\chapter{\acf{SA}}
+\section{Introduzione}
+Il \ac{SA} \`e un metodo usato per trovare l'ottimo globale di una
+funzione data, si ispira ad un metodo usato in metallurgia chiamato
+annealing che consiste nello scaldare e raffreddare lentamente un
+materiale per aumentarne la dimensione dei cristalli e migliorarne le
+caratteristiche chimico-fisiche.
+
+La funzione da ottimizzare pu\`o avere diverse variabili, un tipico
+esempio di problema per il quale pu\`o essere usato \ac{SA} \`e
+\ac{TSP}.
+
+\section{Termodinamica statistica}
+Per descrivere i principi base della termodinamica statistica si
+considera un sistema di esempio. In un reticolo monodimensionale ogni
+punto \`e una particella con un valore di spin che pu\`o essere
+\emph{up} o
+\emph{down}. Se il reticolo ha $N$ punti, allora il sistema pu\`o
+essere in $2^N$ diverse configurazioni, ad ognuna di queste
+configurazioni corrisponde un valore di energia, ad esempio:
+\begin{equation*}
+  E=B(n_+-n_-)
+\end{equation*}
+dove $B$ \`e una certa costante, $n_+$ \`e il numero di particelle con
+spin 
+\emph{up}, ed $n_-$ \`e il numero di particelle con spin \emph{down}.
+
+La probabilit\`a $P(\sigma)$ di trovare il sistema in una certa
+configurazione
+$\sigma$ \`e data dalla distribuzione di Boltzmann-Gibbs:
+\begin{equation}\label{eq:distBoltz}
+  P(\sigma) = C \me^{-E_\sigma/T}
+\end{equation}
+dove $E_\sigma$ \`e l'energia della configurazione, $T$ \`e la
+temperatura\footnote{Nella distribuzione di Boltzmann-Gibbs al
+  denominatore dell'esponente vi \`e $kT$ dove $k$ \`e la costante di
+  Boltzmann e $T$ \`e la temperatura termodinamica. Ma per l'esempio
+  la temperatura \`e un parametro svincolato dalla realt\`a fisica
+  quindi \`e possibile trascurare $k$.} e $C$ \`e una costante di
+normalizzazione.
+
+L'energia media del sistema in equilibrio \`e quindi:
+\begin{eqnarray*}
+  \bar{E} &=& \frac{\sum_\sigma E_\sigma P(\sigma)}{\sum_\sigma
+    P(\sigma)}\\
+  &=& \frac{\sum_\sigma E_\sigma \me^{-E_\sigma/T}}{\sum_\sigma \me^{-E_\sigma/T}}
+\end{eqnarray*}
+Calcolare numericamente il valore di $\bar{E}$ pu\`o essere
+difficile al crescere del numero degli stati, per\`o \`e possibile
+creare un algoritmo di Monte Carlo che simula le fluttuazioni casuali
+tra gli stati in modo che la distribuzione data
+dall'equazione~\eqref{eq:distBoltz} sia rispettata. Partendo da una
+configurazione iniziale arbitraria, dopo un certo numero di \emph{trial} di Monte
+Carlo il metodo converge verso lo stato di
+equilibrio $\bar{E}$ e continua ad oscillare intorno ad $\bar{E}$.
+
+\ac{SA} \`e un metodo di questo tipo.
+
+\section{Algoritmo \acf{SA}}
+Il \ac{SA} si muove su un sistema partendo da un certo stato iniziale
+$s_0$, quindi esegue una serie di iterazioni nelle quali viene
+valutato un vicino dello stato e, con una certa distribuzione di
+probabilit\`a, la dinamica si sposta nel nuovo stato vicino o meno.
+
+Un possibile codice \emph{c-style} di un metodo \ac{SA} \`e il seguente:
+\begin{lstlisting}[frame=single, numbers=left, language=C]
+s = s0;
+for(int k=0; k<kMax; ++k) {
+  T = temp(k/kMax);
+  sNew = vicino(s);
+  if (random(0,1) < P(E(s), E(sNew), T)) {
+    s = sNew;
+  }
+}
+return s;
+\end{lstlisting}
+In riga \codei{1} viene inizializzato il ciclo con lo stato iniziale
+\codei{s0}, in seguito vi \`e un ciclo che esegue \codei{kMax}
+iterazioni. In riga \codei{3} viene assegnato un certo
+valore di tempo a \codei{T} che dipende dal progresso delle
+iterazioni. In riga \codei{4} viene scelto casualmente un vicino \codei{sNew} dello
+stato \codei{s}. In riga \codei{5} vi \`e il fulcro dell'algoritmo,
+\codei{random} sceglie uniformemente un numero casuale in $[0,1)$ e
+\codei{P} implementa la distribuzione di probabilit\`a di accettazione
+che dipende dall'energia
+misurata in \codei{s}, da quella in \codei{sNew} e dalla temperatura
+\codei{T}. In caso di accettazione viene preso \codei{sNew} come nuovo
+stato di base e continua il processo.
+
+La relazione con la termodinamica statistica sta nel fatto che
+\codei{P} viene scelta in modo da mantenere vera la
+relazione~\eqref{eq:distBoltz}\footnote{\`E sufficiente che siano relazioni simili.},
+inoltre il metodo \codei{temp} ritorna
+valori decrescenti di temperatura al crescere delle iterazioni, da qui
+il paragone con l'annealing in metallurgia.
+
+Originalmente, per
+rispettare i principi della termodinamica statistica, \codei{P} venne
+scelta in modo da ritornare \codei{1} se
+$E(sNew)<E(s)$ e $\me^{-(E(sNew)-E(s))/T}$ altrimenti. Tale
+condizione non \`e strettamente necessaria per realizzare dei metodi
+\ac{SA}.
+
+\section{\acf{TSP}}
+\ac{TSP} \`e un problema di ottimizzazione combinatoria e verr\`a
+usato come esempio per descrivere il metodo \ac{SA}. Vengono dati:
+\begin{itemize}
+\item una lista di $N$ citt\`a identificate dai naturali da $1$ ad $N$;
+\item una matrice $D$, $N\times N$, dove $D_{i,j}$ \`e la distanza, o
+  costo, per andare dalla citt\`a $i$ alla citt\`a $j$;
+\item si indica con $\{x_i\}_1^N$ una permutazione $x$ dei naturali da
+  $1$ a $N$, ovvero delle citt\`a.
+\end{itemize}
+L'obbiettivo del problema \`e di trovare una permutazione $c$ delle
+citt\`a tale che sia minima la distanza $d$ espressa dall'equazione:
+\begin{equation}\label{eq:distanzaTSP}
+  d(c) = D_{c_N,c_1}+\sum_{k=1}^{N-1}D_{c_k,c_{k+1}}
+\end{equation}
+
+Ossia si chiede di trovare un percorso che:
+\begin{enumerate}
+\item passi da tutte le citt\`a
+  una ed una sola volta;
+\item sia ciclico, ossia finisca nella citt\`a da cui \`e cominciato;
+\item sia quello con lunghezza minima tra quelli che rispettano le due
+  precedenti condizioni.
+\end{enumerate}
+
+\section{Soluzione \acf{TSP} con \acf{SA}}
+Per risolvere il problema \ac{TSP} vengono interpretati come stati le
+diverse permutazioni delle $N$ citt\`a e viene interpretata la distanza data
+dalla formula~\eqref{eq:distanzaTSP} come energia del sistema quando
+si trova in un certo stato, ossia permutazione delle citt\`a.
+Lo pseudo codice che implementa il metodo \`e il seguente:
+\begin{lstlisting}[frame=single, numbers=left]
+tsp(s, T) {
+  c[k] = s[k] per k=1,...,N
+  dc = distanza(c)
+  i = 1
+  while (! stop()) {
+    j = random(1,N) diverso da i
+    t = scambia(c, i, j)
+    dt = distanza(t)
+    if ((dt<dc) or (random(0,1)<exp((dc-dt)/T))) {
+      c[k] = t[k] per k=1,...,N
+      dc = dt
+    }
+    i = modulo(i, N) + 1
+  }
+  return c
+}
+\end{lstlisting}
+dove il metodo \codei{distanza(s)} calcola la distanza di un percorso
+rappresentato da una permutazione \codei{s}:
+\begin{lstlisting}[frame=single, numbers=left]
+distanza(s) {
+  return D[s[N],s[1]] + sum(D[s[k], s[k+1]])
+                             per k=1,...,N-1
+}
+\end{lstlisting}
+\codei{scambia(c, i, j)} scambia \codei{i} con \codei{j} nel
+percorso \codei{c} e inverte la direzione di quelli in mezzo a
+\codei{i} e \codei{j}:
+\begin{lstlisting}[frame=single, numbers=left]
+scambia(c, i, j) {
+  a = min(i,j)
+  b = max(i,j)
+  t[k] = c[k]      per k=1,...,a-1
+  t[a+k] = c[b-k]  per k=0,...,b-a
+  t[k] = c[k]      per k=b+1,...,N
+  return t
+}  
+\end{lstlisting}
+\codei{i = modulo(i,N)+1} serve per iterare \codei{i} in $1,\dots,N$
+ripetutamente.
+
+Nel codice visto manca da definire la condizione di stop
+data dal metodo \codei{stop()}, essa dovrebbe avvenire quando viene
+raggiunto un equilibrio, ossia quando il metodo oscilla intorno ad un
+certo stato. L'idea \`e che inizialmente si lancia
+la procedura con uno stato iniziale \codei{s} casuale e con una
+temperatura \codei{T} casuale o scelta con un certo criterio. L'algoritmo si ferma
+quando viene raggiunto un equilibrio e ritorna lo stato \codei{c} in
+quell'equilibrio. A questo punto viene decrementato opportunamente la
+temperatura
+\codei{T} e viene eseguita nuovamente la procedura chiamandola sui due nuovi valori
+\codei{TSP(c,T)}.

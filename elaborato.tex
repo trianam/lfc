@@ -1,0 +1,75 @@
+\documentclass[a4paper,twosides]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{microtype}
+\usepackage{acronym}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage[hidelinks,breaklinks=true]{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\newcommand{\me}{\ensuremath{\mathrm{e}}}
+\newcommand{\md}{\ensuremath{\mathrm{d}}}
+\newcommand{\expected}[1]{\ensuremath{\mathrm{\textbf{E}}\left[#1\right]}}
+\newcommand{\variance}[1]{\ensuremath{\mathrm{\textbf{Var}}\left(#1\right)}}
+\newcommand{\prob}[1]{\ensuremath{\mathrm{\textbf{P}}\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\codei}[1]{\texttt{#1}}
+
+\lstdefinestyle{customPy}{
+ language=python,
+ showstringspaces=false,
+ basicstyle=\footnotesize\ttfamily,
+ keywordstyle=\bfseries\color{green!40!black},
+ commentstyle=\itshape\color{purple!40!black},
+ identifierstyle=\color{blue},
+ stringstyle=\color{orange},
+}
+
+%\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+\author{
+  {\Large Stefano Martina}\\
+  {\small stefano.martina@stud.unifi.it}\\
+  Universit\`a degli Studi di Firenze\\
+  Scuola di Scienze Matematiche, Fisiche e Naturali\\
+  Corso magistrale di Informatica
+}
+\title{{\Huge\bfseries Cenni di fisica statistica}\\{\large\bfseries
+    Esame di Laboratorio di Fisica Computazionale}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vfill
+\begin{abstract}
+  Questo lavoro presenta una breve introduzione alla fisica
+  statistica.
+\end{abstract}
+\clearpage
+\acresetall
+
+\graphicspath{{img/}}
+
+\include{inc/montecarlo}
+\include{inc/simulatedAnnealing}
+
+\chapter*{Acronimi}
+\addcontentsline{toc}{section}{Acronimi}
+\begin{acronym}[MCM]
+  \acro{MCM}{Monte Carlo Method}
+  \acro{MCI}{Monte Carlo Integration}
+  \acro{SA}{Simulated Annealing}
+  \acro{TSP}{Traveling Salesman Problem}
+\end{acronym}
+
+\nocite{*}
+\phantomsection
+\addcontentsline{toc}{section}{\refname}
+\bibliographystyle{apalike}
+\bibliography{elaborato}
+
+\end{document} 
